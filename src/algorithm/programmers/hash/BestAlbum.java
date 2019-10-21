@@ -1,9 +1,7 @@
 package algorithm.programmers.hash;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.IntStream;
 
 /**
  * 스트리밍 사이트에서 장르 별로 가장 많이 재생된 노래를 <strong>두 개씩</strong> 모아 베스트 앨범을 출시하려 합니다. 노래는 고유 번호로 구분하며, 노래를 수록하는 기준은 다음과 같습니다.
@@ -43,59 +41,19 @@ public class BestAlbum {
      * @param plays  (ex. {500, 600, 150, 800, 2500})
      * @return (ex. {4, 1, 3, 0})
      */
-    public int[] solution(String[] genres, int[] plays) {
-
-        int[] idx = new int[genres.length];
+	int[] solution(String[] genres, int[] plays) {
+        Map<String, Album> genreMap = new HashMap<>();
         for (int i = 0; i < genres.length; i++) {
-            idx[i] = i;
-        }
-
-        for (int i = 0; i < genres.length - 1; i++) {
-            for (int j = i + 1; j < plays.length; j++) {
-                if (plays[j] > plays[i]) {
-                    int playsTemp = plays[j];
-                    plays[j] = plays[i];
-                    plays[i] = playsTemp;
-                    String genresTemp = genres[j];
-                    genres[j] = genres[i];
-                    genres[i] = genresTemp;
-                    int idxTemp = idx[j];
-                    idx[j] = idx[i];
-                    idx[i] = idxTemp;
-                }
+            if (genreMap.get(genres[i]) == null) {
+                genreMap.put(genres[i], new Album(genres[i]).addPlay(plays[i]).addMusic(new Music(i, plays[i])));
+            } else {
+                genreMap.put(genres[i], genreMap.get(genres[i]).addPlay(plays[i]).addMusic(new Music(i, plays[i] )));
             }
         }
-
-        Map<String, List<Integer>> map = new LinkedHashMap<>();
-        int length = 0;
-        for (int i = 0; i < genres.length; i++) {
-            List<Integer> idxList = map.getOrDefault(genres[i], new ArrayList<>());
-            if (idxList.size() == 2) continue;
-            idxList.add(idx[i]);
-            length++;
-            map.put(genres[i], idxList);
-        }
-
-        int[] answer = new int[length];
-        int i = 0;
-        for (Map.Entry<String, List<Integer>> entry : map.entrySet()) {
-            for (int resultIdx : entry.getValue()) {
-                answer[i++] = resultIdx;
-            }
-        }
-        return answer;
-    }
-
-    private void print(int[] something) {
-        for (int aSomething : something) {
-            System.out.print(aSomething + " ");
-        }
-        System.out.println();
-    }
-
-    public static void main(String[] args) {
-        BestAlbum bestAlbum = new BestAlbum();
-        int[] solution = bestAlbum.solution(new String[]{"classic", "pop", "classic", "classic", "pop"}, new int[]{500, 600, 150, 800, 2500});
-        bestAlbum.print(solution);
+        List<Album> albums = new ArrayList<>(genreMap.values());
+        albums.sort((album1, album2) -> album2.totalPlay() - album1.totalPlay());
+		return albums.stream()
+				.flatMap(album -> album.getTopMusicList().stream())
+				.mapToInt(Integer::intValue).toArray();
     }
 }

@@ -19,18 +19,17 @@ public class Album {
 		return totalPlay;
 	}
 
-	public List<Integer> getTopMusicList() {
-		musicList.sort((o1, o2) -> {
-			if (o1.play() == o2.play()) {
-				return o1.idx() - o2.idx();
-			}
-			return o2.play() - o1.play();
-		});
-		List<Integer> topMusicList = new ArrayList<>();
-		for (Music music : musicList.subList(0, musicList.size() > 2 ? 2 : musicList.size())) {
-			topMusicList.add(music.idx());
-		}
-		return topMusicList;
+	public int[] getTopMusicList() {
+		return musicList.stream()
+				.sorted((o1, o2) -> {
+					if (o1.play() == o2.play()) {
+						return o1.idx() - o2.idx();
+					}
+					return o2.play() - o1.play();
+				})
+				.mapToInt(Music::idx)
+				.limit(2)
+				.toArray();
 	}
 
 	public Album addPlay(int play) {

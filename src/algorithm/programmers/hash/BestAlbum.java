@@ -1,10 +1,13 @@
 package algorithm.programmers.hash;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 /**
- * 스트리밍 사이트에서 장르 별로 가장 많이 재생된 노래를 <strong>두 개씩</strong> 모아 베스트 앨범을 출시하려 합니다. 노래는 고유 번호로 구분하며, 노래를 수록하는 기준은 다음과 같습니다.
+ * 스트리밍 사이트에서 장르 별로 가장 많이 재생된 노래를 <b>두 개씩</b> 모아 베스트 앨범을 출시하려 합니다. 노래는 고유 번호로 구분하며, 노래를 수록하는 기준은 다음과 같습니다.
  * <p>
  * 속한 노래가 많이 재생된 장르를 먼저 수록합니다.
  * 장르 내에서 많이 재생된 노래를 먼저 수록합니다.
@@ -52,8 +55,9 @@ public class BestAlbum {
         }
         List<Album> albums = new ArrayList<>(genreMap.values());
         albums.sort((album1, album2) -> album2.totalPlay() - album1.totalPlay());
+
 		return albums.stream()
-				.flatMap(album -> album.getTopMusicList().stream())
-				.mapToInt(Integer::intValue).toArray();
+				.flatMapToInt(album -> IntStream.of(album.getTopMusicList()))
+				.toArray();
     }
 }

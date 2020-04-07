@@ -1,6 +1,5 @@
 package algorithm.hackerrank;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +21,7 @@ public class SockMerchant {
         return total;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         int result = sockMerchant(9, new int[]{10, 20, 20, 10, 10, 30, 50, 10, 20});
         System.out.println(result);
     }

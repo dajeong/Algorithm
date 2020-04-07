@@ -1,7 +1,5 @@
 package algorithm.hackerrank;
 
-import java.io.IOException;
-
 /**
  * https://www.hackerrank.com/challenges/jumping-on-the-clouds/problem
  */

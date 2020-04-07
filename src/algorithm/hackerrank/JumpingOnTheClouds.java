@@ -7,7 +7,7 @@ import java.io.IOException;
  */
 public class JumpingOnTheClouds {
 
-    // Complete the sockMerchant function below.
+    // Complete the jumpingOnClouds function below.
     static int jumpingOnClouds(int[] c) {
         int jump = -1;
         for (int i = 0; i < c.length; i++) {
